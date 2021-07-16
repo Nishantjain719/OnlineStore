@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import data from "../data.js";
 import User from "../models/userModel.js";
-import { generateToken } from "../utils.js";
+import { generateToken, isAuth } from "../utils.js";
 //  express.Router() makes code modular bc instead of having all routes in server.js we can define multiple files to have routers
 const userRouter = express.Router();
 // Create Apis

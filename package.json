@@ -5,6 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "cd frontend && npm install && npm run build",
     "start": "nodemon --watch backend --exec node --experimental-modules backend/server.js"
   },
   "author": "",
@@ -15,11 +16,16 @@
     "express-async-handler": "^1.1.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.2",
+    "multer": "^1.4.2",
     "react-stripe-checkout": "^2.6.3",
     "stripe": "^8.161.0"
   },
   "devDependencies": {
     "eslint": "^7.30.0",
     "nodemon": "^2.0.10"
+  },
+  "engines": {
+    "node": "12.4.0",
+    "npm": "6.9.0"
   }
 }

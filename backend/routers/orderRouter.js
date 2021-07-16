@@ -1,9 +1,18 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
-import { isAuth } from "../utils.js";
+import { isAuth, isAdmin } from "../utils.js";
 const orderRouter = express.Router();
 
+orderRouter.get(
+  "/",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const orders = await Order.find({}).populate("user", "name");
+    res.send(orders);
+  })
+);
 // Create an API for post req to /api/orders, we Create order Api in orderRouter as a HTTP post method and in server.js we import this api to respond at this /api/orders path
 orderRouter.post(
   "/",
@@ -69,6 +78,39 @@ orderRouter.put(
       const updatedOrder = await order.save();
 
       res.send({ message: "Order Paid", order: updatedOrder });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
+orderRouter.delete(
+  "/:id",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id); // req.params.id this is the value that user entered in url
+    if (order) {
+      const deleteOrder = await order.remove();
+      res.send({ message: "Order Deleted", order: deleteOrder });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
+orderRouter.put(
+  "/:id/deliver",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.isDelivered = true;
+      order.deliveredAt = Date.now();
+
+      const updatedOrder = await order.save();
+      res.send({ message: "Order Delivered", order: updatedOrder });
     } else {
       res.status(404).send({ message: "Order Not Found" });
     }
